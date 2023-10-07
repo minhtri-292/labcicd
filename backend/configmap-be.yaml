@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap
+data:
+  MONGO_USERNAME: admin
+  MONGO_HOSTNAME: mydb-mongodb-0.mydb-mongodb-headless
+  MONGO_PORT: "27017"
+  MONGO_DATABASE: todos
+  PORT: "3001"

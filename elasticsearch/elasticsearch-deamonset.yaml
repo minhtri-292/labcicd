@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: elasticsearch-fluentd
+  labels:
+    k8s-app: elasticsearch-fluentd
+spec:
+  selector:
+    matchLabels:
+      name: elasticsearch-fluentd
+  template:
+    metadata:
+      labels:
+        name: elasticsearch-fluentd
+    spec:
+      serviceAccountName: elasticsearch-fluentd
+      containers:
+      - name: elasticsearch-fluentd
+        image: fluent/fluentd-elasticsearch:latest  # Image for Fluentd with Elasticsearch output
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+        - name: fluentdconf
+          mountPath: /fluentd/etc/fluent.conf
+          subPath: fluent.conf
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: fluentdconf
+        configMap:
+          name: fluentdconf

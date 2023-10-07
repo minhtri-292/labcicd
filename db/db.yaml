@@ -1,0 +1,14 @@
+architecture: replicaset
+useStatefulSet: true
+auth:
+  rootUser: "root"
+  rootPassword: "password"
+  usernames: ["admin"]
+  passwords: ["password"]
+  databases: ["todos"]
+replicaCount: 3
+
+# helm install mydb oci://registry-1.docker.io/bitnamicharts/mongodb -f db.yaml
+# helm upgrade mydb oci://registry-1.docker.io/bitnamicharts/mongodb -f db.yaml
+# helm delete mydb
+# helm upgrade --install mydb oci://registry-1.docker.io/bitnamicharts/mongodb -f value.yaml

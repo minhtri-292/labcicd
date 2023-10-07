@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myserver
+  labels:
+    app: myserver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myserver
+  template:
+    metadata:
+      labels:
+        app: myserver
+    spec:
+      containers:
+      - name: myserver
+        image: ntminh/fadevops-k8s-final-labsum:app3
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "300m"
+        ports:
+        - containerPort: 3001
+        envFrom:
+        - configMapRef:
+            name: app-configmap
+        env:
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mydb-mongodb
+              key: mongodb-passwords
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myserver-ser
+spec:
+  selector:
+    app: myserver
+  type: LoadBalancer
+  ports:
+  - port: 3001
+    targetPort: 3001

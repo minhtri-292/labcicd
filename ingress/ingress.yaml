@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+  labels:
+    name: myingress
+spec:
+  # ingressClassName: nginx
+  rules:
+  - host: nct219.online
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: myclient-ser
+            port: 
+              number: 3000
+  - host: api.nct219.online
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: myserver-ser
+            port: 
+              number: 3001
+  tls:
+  - hosts:
+    - nct219.online
+    secretName: tls-secret  # The name of the TLS secret

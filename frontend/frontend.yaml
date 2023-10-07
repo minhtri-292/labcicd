@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myclient
+  labels:
+    app: myclient
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myclient
+  template:
+    metadata:
+      labels:
+        app: myclient
+    spec:
+      containers:
+      - name: myclient
+        image: ntminh/fadevops-k8s-final-labsum:web5
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "300m"
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: api-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myclient-ser
+spec:
+  selector:
+    app: myclient
+  ports:
+  - port: 3000
+    targetPort: 3000
+
